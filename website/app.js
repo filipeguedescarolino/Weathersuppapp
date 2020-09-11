@@ -1,5 +1,14 @@
+// couldnt find a way to include an error when the zip-code was false so searched for an alert
+var alerted = localStorage.getItem('alerted') || '';
+if (alerted != 'yes') {
+    alert("insert a valid zip-code in order to get the weather data(temperature,date)");
+    localStorage.setItem('alerted', 'yes');
+}
+
 // Cliente SIDE
 // GET Request to the weather info API
+
+
 let baseURL = "http://api.openweathermap.org/data/2.5/weather";
 const apiKey = "605ecf55e91fde13f9baa6c72a0a30eb";
 
@@ -10,9 +19,10 @@ let currentDate = d.getDate() + '.' + (d.getMonth() + 1) + '.' + d.getFullYear()
 document.getElementById("generate").addEventListener("click", performAction);
 
 function performAction(e) {
-    // Select the actual value of an HTML input to include in POST, what the user enter themselfes
+    // Select the actual value of an HTML input to include in POST
     const zipCode = document.getElementById("zip").value;
     const feelings = document.getElementById("feelings").value;
+
 
     //API call
     getWeather(baseURL, zipCode, apiKey).then(function(data) {
@@ -39,6 +49,7 @@ const getWeather = async(baseURL, zip, api) => {
         return (data);
 
     } catch (error) {
+
         console.log("error", error);
     }
 }
@@ -81,34 +92,4 @@ const updateUI = async() => {
 
         console.log("error", error);
     }
-}
-
-//We use the geolocation function to get the user coordinates. It will log the values into the lat and let var
-if ("geolocation" in navigator) {
-    console.log("geolocation is avaliable");
-    navigator.geolocation.getCurrentPosition(position => {
-        let lat = position.coords.latitude;
-        let long = position.coords.longitude;
-        document.getElementById("lat").textContent = lat;
-        document.getElementById("long").textContent = long;
-        console.log(position);
-
-
-
-        const data = { lat, long };
-        const options = {
-            method: 'POST',
-            credentials: "same-origin",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        };
-
-        fetch("file:///C:/code/udacity/Weather-web-api/index.html/api", options);
-
-    });
-
-} else {
-    console.log("geolocation is not avaliable");
 }
